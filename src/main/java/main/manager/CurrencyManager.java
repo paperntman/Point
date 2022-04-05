@@ -1,4 +1,4 @@
-package main;
+package main.manager;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Member;
@@ -14,16 +14,16 @@ public class CurrencyManager {
     static JDA jda;
     public CurrencyManager(String guildID, JDA jda){
         Gid = guildID;
-        Main.setupVars(bet.jda);
-        this.jda = jda;
-    }
-
-    public void setId(String id) {
-        this.Gid = id;
+        CurrencyManager.jda = jda;
     }
 
     public String getId() {
         return Gid;
+    }
+
+    public Map<String, Long> list(){
+        TextChannel tc = create(Gid);
+        return maplize(read(tc));
     }
 
     public void add(Member m, long amount){
@@ -33,10 +33,24 @@ public class CurrencyManager {
         if(!map.containsKey(id)) map.put(id, 0L);
         long originalPoint = map.get(id);
         map.replace(id, originalPoint+amount);
-        update(m.getGuild().getId(), map);
+        update(Gid, map);
+    }
+    
+    public void add(String id, long amount){
+        TextChannel tc = create(Gid);
+        Map<String, Long> map = maplize(read(tc));
+        if(!map.containsKey(id)) map.put(id, 0L);
+        long originalPoint = map.get(id);
+        map.replace(id, originalPoint+amount);
+        update(Gid, map);
     }
 
-    public Long get(Member m){
+    public Long get(String id){
+        TextChannel tc = create(Gid);
+        Map<String, Long> map = maplize(read(tc));
+        if(!map.containsKey(id)) map.put(id, 0L);
+        return map.get(id);
+    }public Long get(Member m){
         String id = m.getId();
         TextChannel tc = create(Gid);
         Map<String, Long> map = maplize(read(tc));
@@ -44,13 +58,19 @@ public class CurrencyManager {
         return map.get(id);
     }
 
-    public void set(Member m, long amount){
+    public void set(String id, long amount){
+        TextChannel tc = create(Gid);
+        Map<String, Long> map = maplize(read(tc));
+        if(!map.containsKey(id)) map.put(id, 0L);
+        map.replace(id, amount);
+        update(Gid, map);
+    }public void set(Member m, long amount){
         String id = m.getId();
         TextChannel tc = create(Gid);
         Map<String, Long> map = maplize(read(tc));
         if(!map.containsKey(id)) map.put(id, 0L);
         map.replace(id, amount);
-        update(m.getGuild().getId(), map);
+        update(Gid, map);
     }
     public static TextChannel create(String id){
         if(mainGuild.getTextChannelsByName(id, true).size() == 0){

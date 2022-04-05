@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="TopenRiot">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../RiotAPI/out/artifacts/TopenRiot/TopenRiot.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
